@@ -5,6 +5,8 @@ const Notification = ({ notification }) => {
     return null
   }
 
+  console.log(notification)
+
   const style = {
     borderStyle: 'solid',
     borderRadius: 5,
@@ -13,9 +15,11 @@ const Notification = ({ notification }) => {
     background: 'lightgrey'
   }
 
-  return <div style={style}>
-    {notification.message}
-  </div>
+  return (
+    <div style={style}>
+      {notification.message}
+    </div>
+  )
 }
 
 export default Notification

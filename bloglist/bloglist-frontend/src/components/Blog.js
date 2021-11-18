@@ -20,11 +20,11 @@ const Blog = ({ blog, handleLike, handleRemove, own }) => {
       </div>
       {visible&&(
         <div>
-          <div>{blog.url}</div>
-          <div>likes {blog.likes}
+          <div key='url'>{blog.url}</div>
+          <div key='likes'>likes {blog.likes}
             <button onClick={() => handleLike(blog)}>like</button>
           </div>
-          <div>{blog.user.name}</div>
+          <div key='user'>{blog.user.name}</div>
           {own&&<button onClick={() => handleRemove(blog)}>remove</button>}
         </div>
       )}

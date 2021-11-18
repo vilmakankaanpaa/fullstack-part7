@@ -10,27 +10,29 @@ const LoginForm = ({
 }) => {
 
   return (
-    <form id='loginform' onSubmit={handleLogin}>
-      <div>
-        username
-        <input id='username'
-          type="text"
-          value={username}
-          name="Username"
-          onChange={handleUsernameChange}
-        />
-      </div>
-      <div>
-        password
-        <input id='password'
-          type="password"
-          value={password}
-          name="Password"
-          onChange={handlePasswordChange}
-        />
-      </div>
-      <button id='login-button' type="submit">login</button>
-    </form>
+    <div>
+      <h2>login to application</h2>
+
+      <form onSubmit={handleLogin}>
+        <div>
+          username
+          <input
+            id='username'
+            value={username}
+            onChange={handleUsernameChange}
+          />
+        </div>
+        <div>
+          password
+          <input
+            id='password'
+            value={password}
+            onChange={handlePasswordChange}
+          />
+        </div>
+        <button id='login'>login</button>
+      </form>
+    </div>
   )
 }
 
