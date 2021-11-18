@@ -11,14 +11,16 @@ import storage from './utils/storage'
 
 import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification, removeNotification } from './reducers/notificationReducer'
+import { login, logout } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const blogs = useSelector(state => state.blogs)
   const notification = useSelector(state => state.notification)
+  const user = useSelector(state => state.user)
 
-  const [user, setUser] = useState(null)
+  //const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
@@ -33,7 +35,7 @@ const App = () => {
 
   useEffect(() => {
     const user = storage.loadUser()
-    setUser(user)
+    dispatch(login(user))
   }, [])
 
   let timeoutId
@@ -54,7 +56,7 @@ const App = () => {
 
       setUsername('')
       setPassword('')
-      setUser(user)
+      dispatch(login(user))
       notifyWith('login succeeded')
       storage.saveUser(user)
     } catch (exception) {
@@ -65,7 +67,7 @@ const App = () => {
   const handleLogout = () => {
     storage.logoutUser()
     notifyWith('You´re logged out')
-    setUser(null)
+    dispatch(logout())
   }
 
   const addBlog = async (blog) => {
