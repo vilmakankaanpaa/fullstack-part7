@@ -3,12 +3,6 @@ import PropTypes from 'prop-types'
 
 const Blog = ({ blog, handleLike, handleRemove, own }) => {
   const [visible, setVisible] = useState(false)
-
-
-  const toggleVisibility = () => {
-    setVisible(!visible)
-  }
-
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -17,48 +11,23 @@ const Blog = ({ blog, handleLike, handleRemove, own }) => {
     marginBottom: 5
   }
 
-  const removeButton = () => (
-    <>
-      <br/>
-      <button
-        id='remove-button'
-        onClick={() => handleRemove(blog)}>
-          Remove
-      </button>
-    </>
-  )
-
-  const blogTeaser = () => (
-    <div className='teaserContent'>
-      {blog.title} by {blog.author}
-      <button id='view-button' onClick={toggleVisibility}>
-        view
-      </button>
-    </div>
-  )
-
-  const blogDetails = () => (
-    <div className='detailedContent'>
-      {blog.title}
-      <button onClick={toggleVisibility}>
-        hide
-      </button>
-      <br/> {blog.url}
-      <br/> likes {blog.likes}
-      <button id='like-button' onClick={() => handleLike(blog)}>
-        like
-      </button>
-      <br/> {blog.user.username}
-      { own && removeButton() }
-    </div>
-  )
+  const label = visible ? 'hide' : 'view'
 
   return (
-    <div className='blog' style={blogStyle}>
-      { !visible
-        ? blogTeaser()
-        : blogDetails()
-      }
+    <div style={blogStyle} className='blog'>
+      <div>
+        <i>{blog.title}</i> by {blog.author} <button onClick={() => setVisible(!visible)}>{label}</button>
+      </div>
+      {visible&&(
+        <div>
+          <div>{blog.url}</div>
+          <div>likes {blog.likes}
+            <button onClick={() => handleLike(blog.id)}>like</button>
+          </div>
+          <div>{blog.user.name}</div>
+          {own&&<button onClick={() => handleRemove(blog)}>remove</button>}
+        </div>
+      )}
     </div>
   )
 }

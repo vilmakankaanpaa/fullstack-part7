@@ -9,38 +9,39 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import storage from './utils/storage'
 
+import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { setNotification, removeNotification } from './reducers/notificationReducer'
+
 const App = () => {
   const dispatch = useDispatch()
 
-  const blogs = useSelector(state => state)
+  const blogs = useSelector(state => state.blogs)
+  const notification = useSelector(state => state.notification)
 
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [notification, setNotification] = useState(null)
 
   const blogFormRef = useRef()
 
   useEffect(() => {
+    console.log('initializing')
     blogService.getAll().then(blogs => {
-      dispatch({
-        type: 'INIT_BLOGS',
-        data: blogs
-      })
+      dispatch(initBlogs(blogs))
     })
-  }, [])
+  }, [dispatch])
 
   useEffect(() => {
     const user = storage.loadUser()
     setUser(user)
   }, [])
 
+  let timeoutId
   const notifyWith = (message, type='success') => {
-    setNotification({
-      message, type
-    })
-    setTimeout(() => {
-      setNotification(null)
+    if (timeoutId) clearTimeout(timeoutId)
+    dispatch(setNotification({ message, type }))
+    timeoutId = setTimeout(() => {
+      dispatch(removeNotification())
     }, 5000)
   }
 
@@ -67,17 +68,13 @@ const App = () => {
     setUser(null)
   }
 
-  const createBlog = async (blog) => {
+  const addBlog = async (blog) => {
     try {
-      const newBlog = await blogService.create(blog)
+      await blogService.create(blog)
       blogFormRef.current.toggleVisibility()
-      dispatch({
-        type: 'NEW_BLOG',
-        data: newBlog
-      })
-      notifyWith(`a new blog '${newBlog.title}' by ${newBlog.author} added!`)
-    }
-    catch (exception) {
+      dispatch(createBlog(blog))
+      notifyWith(`a new blog '${blog.title}' by ${blog.author} added!`)
+    } catch (exception) {
       notifyWith('Could not add blog: missing details.','error')
     }
   }
@@ -86,10 +83,7 @@ const App = () => {
     try {
       const likedBlog = { ...blog, likes: blog.likes + 1 }
       await blogService.update(likedBlog)
-      dispatch({
-        type: 'LIKE',
-        data: likedBlog
-      })
+      dispatch(likeBlog(likedBlog))
       notifyWith('Your like was saved!')
     } catch (error) {
       notifyWith('Like could not be added.','error')
@@ -97,15 +91,11 @@ const App = () => {
   }
 
   const handleRemove = async (blog) => {
-    console.log('removing', blog)
     const ok = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
     if (ok) {
       try {
         await blogService.remove(blog.id)
-        dispatch({
-          type: 'REMOVE_BLOG',
-          data: blog
-        })
+        dispatch(removeBlog(blog.id))
         notifyWith(`Blog by ${blog.author} removed.`)
       } catch (exception) {
         notifyWith('Blog could not be deleted.','error')
@@ -156,7 +146,7 @@ const App = () => {
       </p>
 
       <Togglable buttonLabel='create new blog'  ref={blogFormRef}>
-        <NewBlog createBlog={createBlog} />
+        <NewBlog addBlog={addBlog} user={user} />
       </Togglable>
 
       {blogs.sort(byLikes).map(blog =>

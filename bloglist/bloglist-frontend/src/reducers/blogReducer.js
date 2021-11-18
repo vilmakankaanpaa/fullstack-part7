@@ -15,13 +15,41 @@ const blogReducer = (state = [], action) => {
   }
 
   case 'REMOVE_BLOG': {
-    const removedBlog = action.data
-    return state.filter(blog => blog.id !== removedBlog.id)
+    const id = action.data
+    return state.filter(blog => blog.id !== id)
   }
 
   default: return state
   }
 
+}
+
+export const initBlogs = (blogs) => {
+  return {
+    type: 'INIT_BLOGS',
+    data: blogs
+  }
+}
+
+export const createBlog = (blog) => {
+  return {
+    type: 'NEW_BLOG',
+    data: blog
+  }
+}
+
+export const likeBlog = (blog) => {
+  return {
+    type: 'LIKE',
+    data: blog
+  }
+}
+
+export const removeBlog = (id) => {
+  return {
+    type: 'REMOVE_BLOG',
+    data: id
+  }
 }
 
 export default blogReducer

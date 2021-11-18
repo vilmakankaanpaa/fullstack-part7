@@ -8,7 +8,6 @@ const getConfig = () => {
     headers: { Authorization: `bearer ${storage.loadUser().token}` }
   }
 }
-
 const getAll = () => {
   const request = axios.get(baseUrl)
   return request.then(response => response.data)
