@@ -10,7 +10,7 @@ const blogReducer = (state = [], action) => {
   case 'LIKE': {
     const likedBlog = action.data
     return state.map(blog =>
-      blog.id !== blog.id ? blog : likedBlog
+      blog.id !== likedBlog.id ? blog : likedBlog
     )
   }
 
