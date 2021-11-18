@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import Togglable from './components/Togglable'
@@ -8,10 +9,11 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import storage from './utils/storage'
 
-
 const App = () => {
+  const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
+  const blogs = useSelector(state => state)
+
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -21,7 +23,10 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs => {
-      setBlogs( blogs )
+      dispatch({
+        type: 'INIT_BLOGS',
+        data: blogs
+      })
     })
   }, [])
 
@@ -66,9 +71,10 @@ const App = () => {
     try {
       const newBlog = await blogService.create(blog)
       blogFormRef.current.toggleVisibility()
-      //const blogs = await blogService.getAll()
-      //setBlogs( blogs )
-      setBlogs(blogs.concat(newBlog))
+      dispatch({
+        type: 'NEW_BLOG',
+        data: newBlog
+      })
       notifyWith(`a new blog '${newBlog.title}' by ${newBlog.author} added!`)
     }
     catch (exception) {
@@ -80,9 +86,10 @@ const App = () => {
     try {
       const likedBlog = { ...blog, likes: blog.likes + 1 }
       await blogService.update(likedBlog)
-      //const blogs = await blogService.getAll()
-      //setBlogs( blogs )
-      setBlogs(blogs.map(b => b.id === blog.id ?  { ...likedBlog, likes: blog.likes + 1 } : b))
+      dispatch({
+        type: 'LIKE',
+        data: likedBlog
+      })
       notifyWith('Your like was saved!')
     } catch (error) {
       notifyWith('Like could not be added.','error')
@@ -90,11 +97,15 @@ const App = () => {
   }
 
   const handleRemove = async (blog) => {
+    console.log('removing', blog)
     const ok = window.confirm(`Remove blog ${blog.title} by ${blog.author}`)
     if (ok) {
       try {
         await blogService.remove(blog.id)
-        setBlogs(blogs.filter(b => b.id !== blog.id))
+        dispatch({
+          type: 'REMOVE_BLOG',
+          data: blog
+        })
         notifyWith(`Blog by ${blog.author} removed.`)
       } catch (exception) {
         notifyWith('Blog could not be deleted.','error')
