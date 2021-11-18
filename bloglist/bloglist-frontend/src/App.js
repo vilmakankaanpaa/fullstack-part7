@@ -89,7 +89,7 @@ const App = () => {
 
   if ( !loggedUser ) {
     return (
-      <div>
+      <div className='container'>
         <Notification notification={notification} />
         <LoginForm
           handleLogin={handleLogin}
@@ -103,7 +103,7 @@ const App = () => {
   }
 
   return (
-    <div>
+    <div className='container'>
       <Notification notification={notification} />
       <Blogs
         blogs={blogs}

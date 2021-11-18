@@ -2,6 +2,7 @@ import React from 'react'
 import Blog from './Blog'
 import NewBlog from './NewBlog'
 import Togglable from './Togglable'
+import Table from 'react-bootstrap/Table'
 
 const Blogs = ({
   blogs,
@@ -16,7 +17,6 @@ const Blogs = ({
   return (
     <div>
       <h2>Blogs</h2>
-
       <p>
         {loggedUser.name} logged in <button onClick={handleLogout}>logout</button>
       </p>
@@ -25,15 +25,22 @@ const Blogs = ({
         <NewBlog addBlog={addBlog} user={loggedUser} />
       </Togglable>
 
-      {blogs.sort(byLikes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleLike={handleLike}
-          handleRemove={handleRemove}
-          own={loggedUser.username===blog.user.username}
-        />
-      )}
+      <Table striped>
+        <tbody>
+          {blogs.sort(byLikes).map(blog =>
+            <tr key={blog.id}>
+              <td>
+                <Blog
+                  blog={blog}
+                  handleLike={handleLike}
+                  handleRemove={handleRemove}
+                  own={loggedUser.username===blog.user.username}
+                />
+              </td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
     </div>
   )
 }
