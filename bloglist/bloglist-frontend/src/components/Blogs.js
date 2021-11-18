@@ -7,7 +7,6 @@ import Table from 'react-bootstrap/Table'
 const Blogs = ({
   blogs,
   loggedUser,
-  handleLogout,
   blogFormRef,
   addBlog,
   handleLike,
@@ -16,10 +15,6 @@ const Blogs = ({
   const byLikes = (b1, b2) => b2.likes - b1.likes
   return (
     <div>
-      <h2>Blogs</h2>
-      <p>
-        {loggedUser.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>
 
       <Togglable buttonLabel='create new blog'  ref={blogFormRef}>
         <NewBlog addBlog={addBlog} user={loggedUser} />

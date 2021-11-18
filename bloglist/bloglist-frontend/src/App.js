@@ -4,11 +4,13 @@ import Users from './components/Users'
 import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
+import User from './components/User'
 
 import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUsers } from './reducers/userReducer'
 import { login, logout } from './reducers/loggedUserReducer'
+import { Routes, Route, useMatch } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -87,24 +89,8 @@ const App = () => {
     }
   }
 
-  if ( !loggedUser ) {
-    return (
-      <div className='container'>
-        <Notification notification={notification} />
-        <LoginForm
-          handleLogin={handleLogin}
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-    )
-  }
-
-  return (
-    <div className='container'>
-      <Notification notification={notification} />
+  const blogList = () => (
+    <div>
       <Blogs
         blogs={blogs}
         loggedUser={loggedUser}
@@ -114,7 +100,51 @@ const App = () => {
         handleLike={handleLike}
         handleRemove={handleRemove}
       />
-      <Users users={users}/>
+      <Users users={users}
+      />
+    </div>
+  )
+
+  const loginForm = () => (
+    <div>
+      <LoginForm
+        handleLogin={handleLogin}
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+      />
+    </div>
+  )
+
+  const match = useMatch('/users/:id')
+  const user = match
+    ? users.find(user => user.id === match.params.id)
+    : null
+
+  return (
+    <div className='container'>
+
+      <h2>Blogs</h2>
+      {loggedUser && <p>
+        {loggedUser.name} logged in <button onClick={handleLogout}>logout</button>
+      </p>}
+
+      <Notification notification={notification} />
+
+      <Routes>
+        <Route path='/' element={
+          loggedUser
+            ? blogList()
+            : loginForm()
+        } />
+        <Route path='/users/:id' element={
+          <div>
+            <User user={user} blogs={blogs} />
+          </div>
+        } />
+      </Routes>
+
     </div>
   )
 }
