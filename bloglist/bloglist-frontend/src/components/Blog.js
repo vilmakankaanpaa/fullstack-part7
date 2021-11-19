@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, handleLike, handleRemove, own }) => {
-  const [visible, setVisible] = useState(false)
+const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,23 +11,11 @@ const Blog = ({ blog, handleLike, handleRemove, own }) => {
     marginBottom: 5
   }
 
-  const label = visible ? 'hide' : 'view'
-
   return (
     <div style={blogStyle} className='blog'>
-      <div>
-        <i>{blog.title}</i> by {blog.author} <button onClick={() => setVisible(!visible)}>{label}</button>
-      </div>
-      {visible&&(
-        <div>
-          <div key='url'>{blog.url}</div>
-          <div key='likes'>likes {blog.likes}
-            <button onClick={() => handleLike(blog)}>like</button>
-          </div>
-          <div key='user'>{blog.user.name}</div>
-          {own&&<button onClick={() => handleRemove(blog)}>remove</button>}
-        </div>
-      )}
+      <Link to={`/blogs/${blog.id}`}>
+        <i>{blog.title}</i> by {blog.author}
+      </Link>
     </div>
   )
 }
@@ -37,10 +25,7 @@ Blog.propTypes = {
     title: PropTypes.string.isRequired,
     author: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
-  }).isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
-  own: PropTypes.bool.isRequired
+  }).isRequired
 }
 
 export default Blog

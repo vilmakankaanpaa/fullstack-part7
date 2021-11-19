@@ -8,9 +8,7 @@ const Blogs = ({
   blogs,
   loggedUser,
   blogFormRef,
-  addBlog,
-  handleLike,
-  handleRemove
+  addBlog
 }) => {
   const byLikes = (b1, b2) => b2.likes - b1.likes
   return (
@@ -25,12 +23,7 @@ const Blogs = ({
           {blogs.sort(byLikes).map(blog =>
             <tr key={blog.id}>
               <td>
-                <Blog
-                  blog={blog}
-                  handleLike={handleLike}
-                  handleRemove={handleRemove}
-                  own={loggedUser.username===blog.user.username}
-                />
+                <Blog blog={blog} />
               </td>
             </tr>
           )}

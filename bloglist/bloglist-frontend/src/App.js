@@ -5,15 +5,17 @@ import Blogs from './components/Blogs'
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import User from './components/User'
+import BlogView from './components/BlogView'
 
 import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUsers } from './reducers/userReducer'
 import { login, logout } from './reducers/loggedUserReducer'
-import { Routes, Route, useMatch } from 'react-router-dom'
+import { Routes, Route, useMatch, useNavigate } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
+  const navigate =  useNavigate()
 
   useEffect(() => {
     dispatch(initBlogs())
@@ -83,6 +85,7 @@ const App = () => {
       try {
         dispatch(removeBlog(blog.id))
         notifyWith(`Blog by ${blog.author} removed.`)
+        navigate('/')
       } catch (exception) {
         notifyWith('Blog could not be deleted.','error')
       }
@@ -117,9 +120,14 @@ const App = () => {
     </div>
   )
 
-  const match = useMatch('/users/:id')
-  const user = match
-    ? users.find(user => user.id === match.params.id)
+  const userMatch = useMatch('/users/:id')
+  const user = userMatch
+    ? users.find(user => user.id === userMatch.params.id)
+    : null
+
+  const blogMatch = useMatch('/blogs/:id')
+  const blog = blogMatch
+    ? blogs.find(blog => blog.id === blogMatch.params.id)
     : null
 
   return (
@@ -141,6 +149,16 @@ const App = () => {
         <Route path='/users/:id' element={
           <div>
             <User user={user} blogs={blogs} />
+          </div>
+        } />
+        <Route path='/blogs/:id' element={
+          <div>
+            <BlogView
+              blog={blog}
+              handleLike={() => handleLike(blog)}
+              handleRemove={() => handleRemove(blog)}
+              loggedUser={loggedUser}
+            />
           </div>
         } />
       </Routes>
