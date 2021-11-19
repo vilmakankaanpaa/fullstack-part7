@@ -14,7 +14,6 @@ const notificationReducer = (state = null, action) => {
 let timeoutId
 
 export const setNotification = (notification, timeout) => {
-  console.log(timeout)
   return async dispatch => {
     dispatch(setNew(notification))
 

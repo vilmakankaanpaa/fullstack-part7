@@ -6,6 +6,8 @@ import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import User from './components/User'
 import BlogView from './components/BlogView'
+import Menu from './components/Menu'
+import Headline from './components/Headline'
 
 import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
@@ -92,34 +94,6 @@ const App = () => {
     }
   }
 
-  const blogList = () => (
-    <div>
-      <Blogs
-        blogs={blogs}
-        loggedUser={loggedUser}
-        handleLogout={handleLogout}
-        blogFormRef={blogFormRef}
-        addBlog={addBlog}
-        handleLike={handleLike}
-        handleRemove={handleRemove}
-      />
-      <Users users={users}
-      />
-    </div>
-  )
-
-  const loginForm = () => (
-    <div>
-      <LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        password={password}
-        handleUsernameChange={({ target }) => setUsername(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-      />
-    </div>
-  )
-
   const userMatch = useMatch('/users/:id')
   const user = userMatch
     ? users.find(user => user.id === userMatch.params.id)
@@ -133,25 +107,36 @@ const App = () => {
   return (
     <div className='container'>
 
-      <h2>Blogs</h2>
-      {loggedUser && <p>
-        {loggedUser.name} logged in <button onClick={handleLogout}>logout</button>
-      </p>}
-
+      <Menu />
+      <Headline loggedUser={loggedUser} handleLogout={handleLogout}/>
       <Notification notification={notification} />
 
       <Routes>
         <Route path='/' element={
           loggedUser
-            ? blogList()
-            : loginForm()
+            ? <div>
+              <Blogs blogs={blogs} loggedUser={loggedUser}
+                blogFormRef={blogFormRef} addBlog={addBlog} />
+              <Users users={users} />
+            </div>
+            : <LoginForm
+              handleLogin={handleLogin}
+              username={username}
+              password={password}
+              handleUsernameChange={({ target }) => setUsername(target.value)}
+              handlePasswordChange={({ target }) => setPassword(target.value)}
+            />
         } />
-        <Route path='/users/:id' element={
+        <Route path='users' element={ <Users users={users} /> }/>
+        <Route path='users/:id' element={
           <div>
             <User user={user} blogs={blogs} />
           </div>
         } />
-        <Route path='/blogs/:id' element={
+        <Route path='blogs' element={
+          <Blogs blogs={blogs} loggedUser={loggedUser}
+            blogFormRef={blogFormRef} addBlog={addBlog} />} />
+        <Route path='blogs/:id' element={
           <div>
             <BlogView
               blog={blog}

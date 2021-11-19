@@ -13,7 +13,7 @@ const Blogs = ({
   const byLikes = (b1, b2) => b2.likes - b1.likes
   return (
     <div>
-
+      <h2>Blogs</h2>
       <Togglable buttonLabel='create new blog'  ref={blogFormRef}>
         <NewBlog addBlog={addBlog} user={loggedUser} />
       </Togglable>
