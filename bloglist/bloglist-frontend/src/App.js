@@ -57,14 +57,13 @@ const App = () => {
     }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     notifyWith('You are logged out')
     dispatch(logout())
   }
 
   const addBlog = async (blog) => {
     try {
-      console.log('adding blog', blog)
       dispatch(createBlog(blog))
       blogFormRef.current.toggleVisibility()
       notifyWith(`a new blog '${blog.title}' by ${blog.author} added!`)

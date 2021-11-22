@@ -15,13 +15,9 @@ const BlogView = ({ blog, handleLike, handleRemove, addComment, loggedUser }) =>
   if (!blog){
     return null
   }
-
-  console.log(blog)
-
   const [comment, setComment] = useState('')
 
   const handleNewComment = async (event) => {
-    console.log('leaving new comment', comment)
     event.preventDefault()
     addComment(blog, comment)
     setComment('')

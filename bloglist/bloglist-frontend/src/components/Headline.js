@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Headline = (loggedUser, handleLogout) => {
+const Headline = ({ loggedUser, handleLogout }) => {
   return (
     <div>
       {loggedUser &&
