@@ -6,20 +6,13 @@ const User = ({ user, blogs }) => {
     return null
   }
 
-  const showBlog = (blog) => {
-    const found = blogs.find(b => b.id === blog.id)
-    return (
-      <li key={found.key}> {found.title} </li>
-    )
-  }
-
   return (
     <div>
       <h2>{user.name}</h2>
       <strong>added blogs</strong>
       <ul>
         {user.blogs.map(blog =>
-          showBlog(blog)
+          <li key={blog.key}> {blog.title} </li>
         )}
       </ul>
     </div>

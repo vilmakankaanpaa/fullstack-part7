@@ -9,7 +9,7 @@ const NewBlog = ({ addBlog, user }) => {
     event.preventDefault()
 
     addBlog({
-      title, author, url, likes: 0, user
+      title, author, url, likes: 0, user, comments: []
     })
 
     setTitle('')

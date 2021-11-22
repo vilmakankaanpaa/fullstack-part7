@@ -21,6 +21,10 @@ const blogReducer = (state = [], action) => {
     return state.filter(blog => blog.id !== id)
   }
 
+  case 'ADD_COMMENT': {
+    return state
+  }
+
   default: return state
   }
 
@@ -54,6 +58,13 @@ export const likeBlog = (blog) => {
       type: 'LIKE',
       data: likedBlog
     })
+  }
+}
+
+export const commentBlog = (id, comment) => {
+  return {
+    type: 'ADD_COMMENT',
+    data: { id, comment }
   }
 }
 
