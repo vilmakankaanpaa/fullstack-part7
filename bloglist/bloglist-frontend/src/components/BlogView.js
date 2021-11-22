@@ -10,20 +10,21 @@ const makeid = (length) => {
   return result
 }
 
-const BlogView = ({ blog, handleLike, handleRemove, loggedUser }) => {
+const BlogView = ({ blog, handleLike, handleRemove, addComment, loggedUser }) => {
 
   if (!blog){
     return null
   }
+
+  console.log(blog)
 
   const [comment, setComment] = useState('')
 
   const handleNewComment = async (event) => {
     console.log('leaving new comment', comment)
     event.preventDefault()
+    addComment(blog, comment)
     setComment('')
-    //dispatch(login({ username, password }))
-    //notifyWith('you left a new comment')
   }
 
   const own = loggedUser.username===blog.user.username

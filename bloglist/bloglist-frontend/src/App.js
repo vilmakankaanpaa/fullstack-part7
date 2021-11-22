@@ -9,7 +9,7 @@ import BlogView from './components/BlogView'
 import Menu from './components/Menu'
 import Headline from './components/Headline'
 
-import { initBlogs, createBlog, likeBlog, removeBlog } from './reducers/blogReducer'
+import { initBlogs, createBlog, likeBlog, removeBlog, commentBlog } from './reducers/blogReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { initUsers } from './reducers/userReducer'
 import { login, logout } from './reducers/loggedUserReducer'
@@ -96,6 +96,12 @@ const App = () => {
     }
   }
 
+  const addComment = async (blog, comment) => {
+    dispatch(commentBlog(blog, comment))
+    notifyWith('a new comment added!')
+    navigate(`/blogs/${blog.id}`)
+  }
+
   const userMatch = useMatch('/users/:id')
   const user = userMatch
     ? users.find(user => user.id === userMatch.params.id)
@@ -144,6 +150,7 @@ const App = () => {
               blog={blog}
               handleLike={() => handleLike(blog)}
               handleRemove={() => handleRemove(blog)}
+              addComment={addComment}
               loggedUser={loggedUser}
             />
           </div>
